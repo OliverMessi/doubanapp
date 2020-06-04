@@ -1,7 +1,7 @@
 <template>
  <div id="home">
-   <nav-bar class="home-nav"><div slot="center">豆瓣图书</div></nav-bar>
-   <home-swiper :subjects="subjects"/>
+   <nav-bar class="home-nav"><div slot="center">开心购物</div></nav-bar>
+   <home-swiper :banners="banners"/>
  </div>
 </template>
 
@@ -20,14 +20,16 @@
     },
     data(){
       return{
-        subjects:[],//存放热映的电影数组数据
+        banners:[],
+        recommends:[]
       }
     },
     created(){
       //1.请求多个数据
       getHomeMultidata().then(res=>{
-        console.log(res);
-         this.subjects = res.subjects;
+        this.banners = res.data.banner.list;
+        this.recommends = res.data.recommend.list;
+
       })
     }
   }

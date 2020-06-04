@@ -1,10 +1,10 @@
 <template>
-  <h2>书影音</h2>
+  <h2>购物车</h2>
 </template>
 
 <script>
   export default {
-    name: "Subject"
+    name: "Cart"
   }
 </script>
 

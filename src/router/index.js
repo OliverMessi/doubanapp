@@ -2,9 +2,8 @@ import Vue from 'vue'
 import  VueRouter from 'vue-router'
 
 const Home = () => import('../views/home/Home')
-const Subject = () => import('../views/subject/Subject')
-const Group = () => import('../views/group/Group')
-const Mall = () => import('../views/mall/Mall')
+const Category = () => import('../views/category/Category')
+const Cart = () => import('../views/cart/Cart')
 const Profile = () => import('../views/profile/Profile')
 //1.安装插件
 Vue.use(VueRouter)
@@ -20,16 +19,12 @@ const routes = [
     component: Home
   },
   {
-    path: '/subject',
-    component: Subject
+    path: '/category',
+    component: Category
   },
   {
-    path: '/group',
-    component: Group
-  },
-  {
-    path: '/mall',
-    component: Mall
+    path: '/cart',
+    component: Cart
   },
   {
     path: '/profile',

@@ -1,8 +1,8 @@
 <template>
   <swiper>
-    <swiper-item v-for="item in subjects">
-      <a :href="item.alt">
-        <img :src="item.images.small" alt="未显示" height="200"/>
+    <swiper-item v-for="item in banners">
+      <a :href="item.link">
+        <img :src="item.image" alt="未显示"/>
       </a>
     </swiper-item>
   </swiper>
@@ -14,7 +14,7 @@
   export default {
     name: "HomeSwiper",
     props:{
-      subjects:{
+      banners:{
         type:Array,
         default(){
           return []
