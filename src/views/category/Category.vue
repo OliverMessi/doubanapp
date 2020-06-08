@@ -111,9 +111,16 @@
     name: "Category",
     mounted(){
       new BScroll('.wrapper',{
-        probeType:3
+        probeType:3,
+        pullUpLoad:true
+      });
+      this.scroll.on('scroll',(position)=>{
+
+      });
+      this.scroll.on('pullingUp',()=>{
+        console.log('上拉加载更多');
       })
-      this.scroll.on('scroll',(position)=>{})
+
     }
   }
 </script>
