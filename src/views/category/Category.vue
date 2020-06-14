@@ -109,8 +109,13 @@
   import  BScroll from 'better-scroll';
   export default {
     name: "Category",
+    data() {
+      return {
+        scroll: null
+      }
+    },
     mounted(){
-      new BScroll('.wrapper',{
+      this.scroll = new BScroll('.wrapper',{
         probeType:3,
         pullUpLoad:true
       });
