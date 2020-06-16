@@ -35,12 +35,12 @@
   }
 
   .recommend-item{
-    flex:1;
+    flex:1 ;
   }
 
   .recommend-item img{
-    width: 70px;
-    height: 70px;
-    margin-bottom: 10px;
+    width: 60px;
+    height: 60px;
+    margin-bottom: 5px;
   }
 </style>
