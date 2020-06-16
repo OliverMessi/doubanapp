@@ -1,14 +1,14 @@
 <template>
   <div id="detail">
-    <detail-nav-bar class="detail-nav"/>
+    <detail-nav-bar class="detail-nav" @titleClick="titleClick"/>
     <scroll class="content" ref="scroll">
       <detail-swiper :top-images="topImages"/>
       <detail-base-info :goods="goods"/>
       <detail-shop-info :shop="shop"/>
       <detail-goods-info :detail-info="detailInfo" @imageLoad="imageLoad"/>
-      <detail-param-info :param-info="paramInfo"/>
-      <detail-comment-info :comment-info="commentInfo"/>
-      <goods-list :goods="recommends"/>
+      <detail-param-info ref="params" :param-info="paramInfo"/>
+      <detail-comment-info ref="comment" :comment-info="commentInfo"/>
+      <goods-list ref="recommend" :goods="recommends"/>
     </scroll>
   </div>
 </template>
@@ -24,7 +24,8 @@
 
 
  import {getDetail,Goods,Shop,GoodsParam,getRecommend} from "network/detail";
-
+ import {debounce} from "common/utils";
+ import {itemListenerMixin} from 'common/mixin'
 
  import  Scroll from 'components/common/scroll/Scroll';
  import GoodsList from 'components/content/goods/GoodsList';
@@ -50,7 +51,9 @@
         detailInfo:{},
         paramInfo:{},
         commentInfo:{},
-        recommends:[]
+        recommends:[],
+        themeTopYs:[],
+        getThemeTopY:null
       }
     },
     created(){
@@ -78,15 +81,50 @@
         if(data.rate.cRate!==0){
           this.commentInfo=data.rate.list[0]
         }
+        // this.$nextTick(()=>{//页面渲染完时会执行nextTick
+        //   //根据最新的数据，对应的DOM是已经被渲染出来
+        //   //但是图片依然是没有加载完（目前获取到offsetTop不包含其中的图片）
+        //   //offsetTop值不对的时候，都是因为图片的问题
+        //   this.themeTopYs=[];
+        //   this.themeTopYs.push(0);
+        //   this.themeTopYs.push(this.$refs.params.$el.offsetTop);
+        //   this.themeTopYs.push(this.$refs.comment.$el.offsetTop);
+        //   this.themeTopYs.push(this.$refs.recommend.$el.offsetTop);
+        //   console.log(this.themeTopYs);
+        // })
+
       })
       //3.请求推荐数据
       getRecommend().then(res=>{
         this.recommends = res.data.list;
       })
+      //4.给getThemeTopY赋值
+      this.getThemeTopY = debounce(()=>{
+        this.themeTopYs=[];
+        this.themeTopYs.push(0);
+        this.themeTopYs.push(this.$refs.params.$el.offsetTop);
+        this.themeTopYs.push(this.$refs.comment.$el.offsetTop);
+        this.themeTopYs.push(this.$refs.recommend.$el.offsetTop);
+      },100)
     },
+   mounted(){
+
+   },
+   updated(){
+
+   },
+   mixins:[itemListenerMixin],
+   destroyed(){
+      //取消全局事件的监听
+     this.$bus.$off("itemImageLoad",this.itemImgListener)
+   },
    methods:{
      imageLoad(){
-       this.$refs.scroll.refresh()
+       this.$refs.scroll.refresh();
+       this.getThemeTopY();
+     },
+     titleClick(index){
+       this.$refs.scroll.scrollTo(0,-this.themeTopYs[index],100)
      }
    }
   }
@@ -104,7 +142,14 @@
    z-index: 9;
    background-color: #fff;
  }
-  .content{
-    height: calc(100% - 44px);
-  }
+ .content {
+   position: absolute;
+   top: 44px;
+   bottom: 58px;
+   left: 0;
+   right: 0;
+ }
+  /*.content{*/
+    /*height: calc(100% - 44px);*/
+  /*}*/
 </style>
