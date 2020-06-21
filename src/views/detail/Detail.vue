@@ -12,6 +12,7 @@
     </scroll>
     <detail-bottom-bar @addCart="addToCart()"/>
     <back-top @click.native="backClick" v-show="showBackTop"/>
+    <toast ref="toast"/>
   </div>
 </template>
 
@@ -32,6 +33,10 @@
 
  import  Scroll from 'components/common/scroll/Scroll';
  import GoodsList from 'components/content/goods/GoodsList';
+
+ import Toast from 'components/common/toast/Toast'
+
+ import { mapActions } from 'vuex'
  export default {
     name: "Detail",
     components:{
@@ -44,7 +49,8 @@
       DetailCommentInfo,
       DetailBottomBar,
       Scroll,
-      GoodsList
+      GoodsList,
+      Toast
     },
    data(){
       return {
@@ -125,6 +131,7 @@
      this.$bus.$off("itemImageLoad",this.itemImgListener)
    },
    methods:{
+     ...mapActions(['addCart']),
      backClick(){
        this.$refs.scroll.scrollTo(0,0,500);
      },
@@ -158,7 +165,7 @@
      },
      addToCart(){
        //1.获取购物车需要展示的信息
-       const product ={}
+       const product ={};
        product.image = this.topImages[0]
        product.title = this.goods.title;
        product.desc = this.goods.desc;
@@ -166,7 +173,9 @@
        product.iid = this.iid;
        //2.将商品添加到购物车
        // this.$store.commit('addCart',product);
-       this.$store.dispatch("addCart",product);
+       this.addCart(product).then(res=>{
+         this.$toast.show(res,2000)
+       });
      }
 
    }
